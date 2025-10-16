@@ -1,0 +1,26 @@
+{
+  "ide": {
+    "hasSeenNudge": true,
+    "enabled": true
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "ui": {
+    "theme": "GitHub"
+  },
+  "mcpServers": {
+    "gitingest-mcp": {
+      "command": "uv",
+      "timeout": 50000,
+      "args": [
+        "run",
+        "--directory",
+        "/Users/weiyih/work/agentic-softwares/Gitingest-MCP/src/gitingest_mcp/",
+        "server_stdio.py"
+      ]
+    }
+  }
+}
