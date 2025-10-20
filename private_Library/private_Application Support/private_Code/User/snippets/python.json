@@ -1,0 +1,288 @@
+{
+    // Place your snippets for python here. Each snippet is defined under a snippet name and has a prefix, body and 
+    // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+    // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+    // same ids are connected.
+    // Example:
+    // "Print to console": {
+    //  "prefix": "log",
+    //  "body": [
+    //          "console.log('$1');",
+    //          "$2"
+    //  ],
+    //  "description": "Log output to console"
+    // }
+    "Vertex AI OpenAI SDK Setup": {
+        "prefix": "vertexai-openai-setup",
+        "body": [
+            "# Programmatically get an access token",
+            "creds, project = google.auth.default()",
+            "auth_req = google.auth.transport.requests.Request()",
+            "creds.refresh(auth_req)",
+            "# Note: the credential lives for 1 hour by default (https://cloud.google.com/docs/authentication/token-types#at-lifetime); after expiration, it must be refreshed.",
+            "",
+            "# Pass the Vertex endpoint and authentication to the OpenAI SDK",
+            "PROJECT_ID = 'PROJECT_ID'",
+            "LOCATION = 'LOCATION'",
+            "",
+            "##############################",
+            "# Choose one of the following:",
+            "##############################",
+            "",
+            "# If you are calling a Gemini model, set the MODEL_ID variable and set",
+            "# your client's base URL to use openapi.",
+            "MODEL_ID = 'MODEL_ID'",
+            "client = openai.OpenAI(",
+            "    base_url = f'https://{LOCATION}-aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{LOCATION}/endpoints/openapi',",
+            "    api_key = creds.token)",
+            "$0"
+        ],
+        "description": "Vertex AI OpenAI SDK Setup"
+    },
+    "Colab Auth": {
+        "prefix": "colabauth",
+        "body": [
+            "import sys",
+            "",
+            "if 'google.colab' in sys.modules:",
+            "    from google.colab import auth",
+            "    auth.authenticate_user()"
+        ],
+        "description": "Authenticate user in Google Colab"
+    },
+    "Google Cloud Authentication": {
+        "prefix": "gcloud-auth",
+        "description": "Insert Google Cloud authentication boilerplate code",
+        "body": [
+            "import google.auth",
+            "import google.auth.transport.requests",
+            "",
+            "# Scope for all google cloud APIs",
+            "creds, _ = google.auth.default(",
+            "    scopes=[\"https://www.googleapis.com/auth/cloud-platform\"]",
+            ")",
+            "auth_req = google.auth.transport.requests.Request()",
+            "creds.refresh(auth_req)",
+            "# Note: the credential lives for 1 hour by default (https://cloud.google.com/docs/authentication/token-types#at-lifetime); after expiration, it must be refreshed."
+        ]
+    },
+    "OpenAI Credentials Refresher": {
+        "prefix": "openai creds",
+        "description": "Create OpenAI credentials refresher class for Google Cloud authentication",
+        "body": [
+            "from typing import Any",
+            "import google.auth",
+            "import google.auth.transport.requests",
+            "import openai",
+            "",
+            "",
+            "class OpenAICredentialsRefresher:",
+            "    def __init__(self, **kwargs: Any) -> None:",
+            "        # Set a placeholder key here",
+            "        self.client = openai.OpenAI(**kwargs, api_key=\"PLACEHOLDER\")",
+            "        self.creds, self.project = google.auth.default(",
+            "            scopes=[\"https://www.googleapis.com/auth/cloud-platform\"]",
+            "        )",
+            "",
+            "    def __getattr__(self, name: str) -> Any:",
+            "        if not self.creds.valid:",
+            "            self.creds.refresh(google.auth.transport.requests.Request())",
+            "",
+            "            if not self.creds.valid:",
+            "                raise RuntimeError(\"Unable to refresh auth\")",
+            "",
+            "            self.client.api_key = self.creds.token",
+            "        return getattr(self.client, name)",
+            ""
+        ]
+    },
+    "Google Cloud Secret Manager Access": {
+        "prefix": "gcp-secret",
+        "description": "Access a secret from Google Cloud Secret Manager",
+        "body": [
+            "from google.cloud import secretmanager",
+            "",
+            "def access_secret_version(secret_id, version_id=\"latest\"):",
+            "    # Create the Secret Manager client.",
+            "    client = secretmanager.SecretManagerServiceClient()",
+            "",
+            "    # Build the resource name of the secret version.",
+            "    name = f\"projects/${1:PROJECT_ID}/secrets/{secret_id}/versions/{version_id}\"",
+            "",
+            "    # Access the secret version.",
+            "    response = client.access_secret_version(name=name)",
+            "",
+            "    # Return the decoded payload.",
+            "    return response.payload.data.decode('UTF-8')"
+        ]
+    },
+    "GCP Project ID": {
+        "prefix": "gcp project id",
+        "description": "Insert GCP project ID and location constants",
+        "body": [
+            "PROJECT_ID = \"hello-world-418507\"",
+            "LOCATION = \"us-central1\"",
+            "STAGING_BUCKET = \"gs://2025-adk-workshop\"",
+            "SESSION_SERVICE_AGENT_ENGINE = \"projects/671247654914/locations/us-central1/reasoningEngines/3857253916005629952\""
+        ]
+    },
+    "Vertex AI Accelerator Config": {
+        "prefix": "vertex-gpu-config",
+        "description": "Template for Vertex AI accelerator configuration",
+        "body": [
+            "accelerator_type = \"${1|NVIDIA_L4,NVIDIA_TESLA_A100,NVIDIA_TESLA_V100,NVIDIA_TESLA_P100,NVIDIA_A100_80GB,NVIDIA_H100_80GB,NVIDIA_TESLA_T4,TPU_V5e,TPU_V3|}\"",
+            "machine_type = \"${2:g2-standard-8}\"",
+            "accelerator_count = ${3:1}",
+            "max_num_seqs = ${4:256}",
+            "",
+            "accelerator_suffix_map = {",
+            "    \"NVIDIA_TESLA_V100\": \"nvidia_v100_gpus\",",
+            "    \"NVIDIA_TESLA_P100\": \"nvidia_p100_gpus\",",
+            "    \"NVIDIA_L4\": \"nvidia_l4_gpus\",",
+            "    \"NVIDIA_TESLA_A100\": \"nvidia_a100_gpus\",",
+            "    \"NVIDIA_A100_80GB\": \"nvidia_a100_80gb_gpus\",",
+            "    \"NVIDIA_H100_80GB\": \"nvidia_h100_gpus\",",
+            "    \"NVIDIA_TESLA_T4\": \"nvidia_t4_gpus\",",
+            "    \"TPU_V5e\": \"tpu_v5e\",",
+            "    \"TPU_V3\": \"tpu_v3\",",
+            "}"
+        ]
+    },
+    "Gemini Message History": {
+        "prefix": "gemini-history",
+        "description": "Create a message history for Gemini AI (text, image, or mixed)",
+        "body": [
+            "from google.genai import types",
+            "from PIL import Image",
+            "import requests",
+            "",
+            "# Load image if needed",
+            "image = Image.open(",
+            "    requests.get(",
+            "        \"${1:https://storage.googleapis.com/cloud-samples-data/generative-ai/image/meal.png}\",",
+            "        stream=True,",
+            "    ).raw",
+            ")",
+            "",
+            "message_history = [",
+            "    types.Content(",
+            "        role=\"user\",",
+            "        parts=[",
+            "            {\"text\": \"${2:What's the largest planet in our solar system?}\"}",
+            "        ],",
+            "    ),",
+            "    types.Content(",
+            "        role=\"assistant\",",
+            "        parts=[{\"text\": \"${3:The largest planet in our solar system is Jupiter.}\"}],",
+            "    ),",
+            "    types.Content(",
+            "        role=\"user\",",
+            "        parts=[",
+            "            Part.from_uri(",
+            "                file_uri=\"${4:https://storage.googleapis.com/cloud-samples-data/generative-ai/image/meal.png}\",",
+            "                mime_type=\"${5:image/png}\",",
+            "            ),",
+            "            {\"text\": \"${6:what is in the image in one sentence?}\"},",
+            "        ],",
+            "    ),",
+            "]",
+            "",
+            "response = client.models.generate_content(model=${7:MODEL_ID}, contents=message_history)",
+            "print(response.text)"
+        ]
+    },
+    "Python Warning Suppression": {
+        "prefix": "warn_ignore",
+        "body": [
+            "import warnings",
+            "warnings.filterwarnings(\"ignore\", category=UserWarning)",
+            "$0"
+        ],
+        "description": "Add Python warning suppression for UserWarnings"
+    },
+      "Google OAuth Token Info Extraction": {
+        "prefix": "gcp-oauth-token-info",
+        "body": [
+        "def extract_user_info(access_token: str) -> Dict[str, Any]:",
+        "    \"\"\"",
+        "    Extract user information from Google OAuth access token using Google's OAuth2 API.",
+        "    \"\"\"",
+        "",
+        "    try:",
+        "        # Use Google's OAuth2 API to get token information",
+        "        url = f\"https://www.googleapis.com/oauth2/v3/tokeninfo?access_token={access_token}\"",
+        "        response = requests.get(url)",
+        "",
+        "        if response.status_code == 200:",
+        "            token_info = response.json()",
+        "            return token_info",
+        "        else:",
+        "            logger.error(",
+        "                f\"Failed to get token info from Google API: {response.status_code} - {response.text}\"",
+        "            )",
+        "            return None",
+        "",
+        "    except Exception as e:",
+        "        logger.error(f\"Error extracting user info from Google API: {e}\")",
+        "        return None"
+        ],
+        "description": "Extract user information from Google OAuth access token"
+    },
+    "Google Cloud Authentication 2": {
+        "prefix": "gcp-auth",
+        "body": [
+          "def get_google_cloud_auth():",
+          "    \"\"\"",
+          "    Obtain Google Cloud credentials and return the access token, auth scheme, and auth credential.",
+          "    \"\"\"",
+          "    # Scope for all google cloud APIs",
+          "    creds, _ = google.auth.default(",
+          "        scopes=[\"https://www.googleapis.com/auth/cloud-platform\"]",
+          "    )",
+          "    auth_req = google.auth.transport.requests.Request()",
+          "    creds.refresh(auth_req)",
+          "",
+          "    logger.info(f\"Access token: {creds.token[:10]}...\")",
+          "    user_info = extract_user_info(creds.token)",
+          "    logger.info(f\"User info: {user_info}\")",
+          "",
+          "    auth_scheme, auth_credential = token_to_scheme_credential(",
+          "        \"oauth2Token\", \"header\", \"Authorization\", creds.token",
+          "    )",
+          "",
+          "    return creds.token, auth_scheme, auth_credential"
+        ],
+        "description": "Get Google Cloud authentication credentials"
+      },
+        "Python Logger Setup with Import": {
+            "prefix": "logger-setup-full",
+            "body": [
+            "import logging",
+            "",
+            "LOGGING_FORMAT = (",
+            "    \"%(asctime)s - %(levelname)s - %(name)s - %(filename)s:%(lineno)d - %(message)s\"",
+            ")",
+            "",
+            "LEVEL = logging.${1|DEBUG,INFO,WARNING,ERROR,CRITICAL|}",
+            "",
+            "logger = logging.getLogger(\"${2:weiyih_adk}.\" + __name__)",
+            "logger2 = logging.getLogger(\"${3:weiyih_adk2}.\" + __name__)",
+            "",
+            "logging.basicConfig(level=LEVEL, format=LOGGING_FORMAT)",
+            "",
+            "logger.info(\"${4:info}\")",
+            "logger.debug(\"${5:debug}\")",
+            "logger2.info(\"${6:info}\")",
+            "logger2.debug(\"${7:debug}\")",
+            "",
+            "",
+            "# Add extract output stream to console with differnet format",
+            "console_handler = logging.StreamHandler()",
+            "formatter = logging.Formatter(\"${3:%(asctime)s - %(name)s - %(levelname)s - %(message)s}\")",
+            "console_handler.setFormatter(formatter)",
+            "logger.addHandler(console_handler)"
+            ],
+            "description": "Setup Python logger with import, console handler and formatter"
+        }
+
+}

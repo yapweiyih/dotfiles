@@ -1,0 +1,65 @@
+{
+    "workbench.colorTheme": "Default Dark Modern",
+    "cloudcode.project": "hello-world-418507",
+    "workbench.startupEditor": "none",
+    "jupyter.askForKernelRestart": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "application.shellEnvironmentResolutionTimeout": 30,
+    // "editor.defaultFormatter": "ms-python.black-formatter",
+    // "editor.formatOnSave": false,
+    "notebook.output.wordWrap": true,
+    "notebook.output.scrolling": true,
+    "editor.minimap.enabled": false,
+    "editor.accessibilitySupport": "off",
+    "terminal.integrated.scrollback": 10000,
+    "jupyter.runStartupCommands": [
+            "%run -i startup.py"
+        ],
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}"
+    ],
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
+    ],
+    "cloudcode.autoDependencies": "off",
+    "terminal.integrated.env.osx": {
+        "PYTHONPATH": "${workspaceFolder}:${workspaceFolder}/src:${env:PYTHONPATH}"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        },
+      },
+      "isort.args":["--profile", "black"],
+    "jupyter.logging.level": "debug",
+    "geminicodeassist.project": "hello-world-418507",
+    "remote.defaultExtensionsIfInstalledLocally": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "GitHub.vscode-pull-request-github"
+    ],
+    "python.terminal.activateEnvironment": false,
+    "inlineChat.notebookAgent": true,
+    "chat.todoListTool.enabled": true,
+    "github.copilot.nextEditSuggestions.enabled": true,
+    // "chat.mcp.autostart": "newAndOutdated",
+    "telemetry.feedback.enabled": false,
+    "chat.mcp.serverSampling": {
+        "Global in Code: github": {
+            "allowedModels": [
+                "copilot/claude-sonnet-4"
+            ]
+        }
+    },
+    "chat.agent.maxRequests": 100,
+    "python.analysis.typeCheckingMode": "standard",
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+    "chat.promptFiles": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "chat.mcp.gallery.enabled": true,
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+
+}
