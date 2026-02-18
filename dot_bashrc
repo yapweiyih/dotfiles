@@ -147,10 +147,13 @@ source "$OSH"/oh-my-bash.sh
 # export PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 # export PROJECT_NUMBER=$(gcloud projects list --filter=${PROJECT_ID} --format="value(PROJECT_NUMBER)") 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 eval "$(/Users/weiyih/.local/bin/mise activate bash)"
 
 # https://g3doc.corp.google.com/company/users/mbettan/tutorials/gemini-cli-macbook/gemini-cli-macbook.md?cl=head
 export NODE_EXTRA_CA_CERTS="$HOME/.ssl/system-ca-bundle.crt"
+
+# opencode
+export PATH=/Users/weiyih/.opencode/bin:$PATH
